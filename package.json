@@ -1,0 +1,20 @@
+{
+  "name": "Chat List App",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@testing-library/react": "^11.2.5",
+    "react": "16.14.0",
+    "react-dom": "16.14.0",
+    "react-icons": "^4.2.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  },
+  "devDependencies": {
+    "react-scripts": "latest"
+  }
+}
