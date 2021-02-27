@@ -10,11 +10,11 @@ export default function Message({ message, onDeleteMessage }) {
     const dateNum = jsDate.getDate();
     const year = jsDate.getFullYear();
     const hours = hoursMapping[jsDate.getHours()];
-    const minutes = jsDate.getMinutes();
-    const seconds =
-      jsDate.getSeconds() > 9 ? jsDate.getSeconds() : `0${jsDate.getSeconds()}`;
-    const formatDate = `${day} ${month} ${dateNum}, ${year} 
-    at ${hours}:${minutes}:${seconds}`;
+    const jsDateMinutes = jsDate.getMinutes()
+    const minutes = jsDateMinutes > 9 ? jsDateMinutes : `0${jsDateMinutes}`;
+    const jsDateSeconds = jsDate.getSeconds()
+    const seconds = jsDateSeconds > 9 ? jsDateSeconds : `0${jsDateSeconds}`;
+    const formatDate = `${day} ${month} ${dateNum}, ${year} at ${hours}:${minutes}:${seconds}`;
     return formatDate;
   };
 
@@ -28,6 +28,7 @@ export default function Message({ message, onDeleteMessage }) {
         <p>
           {formattedDate}
           <FaTrashAlt
+            data-testid={`delete-icon-${uuid}-${content}`}
             onClick={() => onDeleteMessage(uuid, content)}
             style={{ marginLeft: 20, cursor: "pointer" }}
             size="0.9em"

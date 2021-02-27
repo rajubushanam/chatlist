@@ -14,7 +14,7 @@ const App = () => {
   const [maxPerPage, setMaxPerPage] = useState(5);
   const [lastPostIndex, setLastPostIndex] = useState(5);
   const [firstPostIndex, setFirstPostIndex] = useState(0);
-  const [allMessages, setAllMessages] = useState([]);
+  const [allMessages, setAllMessages] = useState(messages);
   const [totalPages, setTotalPages] = useState(1);
 
   const handleFilterMessages = messages => {
@@ -105,4 +105,4 @@ const App = () => {
   );
 };
 
-render(<App />, document.getElementById("root"));
+export default App

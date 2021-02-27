@@ -7,10 +7,13 @@ export default function ListContainer({ messages, sortType }) {
 
   useEffect(() => {
     setLoading(true);
-    setTimeout(() => {
+    const timer = setTimeout(() => {
       setActualMessages(messages);
       setLoading(false);
-    }, 1000);
+    }, 800);
+    return () => {
+      clearTimeout(timer)
+    }
   }, [messages, sortType]);
 
   const handleDeleteMessage = useCallback(
@@ -35,6 +38,7 @@ export default function ListContainer({ messages, sortType }) {
           />
         );
       })}
+      {actualMessages.length === 0 && 'No Messages'}
       {loading && <p>Loading...</p>}
     </div>
   );
