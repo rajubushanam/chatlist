@@ -21,16 +21,13 @@
   - index.js - starting point for the app, imports App component here.
   - App.js - Contains the Header and ListContainer components here, all the app rendering happens in this functional component. Logic for sorting messages and handling messages in a page are in this component.
   - style.css - contains all the styling for the app
-  - components - folder that contains all the components related to the app, in our case we have two components called Message.js and Header.js.
+  - components - folder that contains all the components related to the app, in our case we have Message.js, Header.js and ErrorComponent.js.
   - containers - folder that contains all the containers related to the app, in our case we have only one container called ListContainer.js
   - utils - folder that contains all the reusable global strings/objects/utility functions. In our case we have dateUtils.js that includes all date related objects.
 
 # Description-
   - Component Layout - We follow the react architecture of top-down approach and separating the UI into reusable components. Considering the app data flow being small, we wouldnt need to worry about data handling libraries like redux. 
-  - ![alt text](http://url/to/img.png)
-                    --> Header.js
-                   |
-    index.js ---> ---> ListContainer.js ---> Message.js
+  - ![alt text](https://drive.google.com/uc?id=1OTG4CZuUtvlWwCZkrkPLdZIP1jQ2jfOT)
 
     - In index.js we render App component. App component renders Header component and ListContainer. Header component renders sort button and messages info, pages button which contains prev and next buttons along with page information, finally ListContainer that contains the complete list of messages for each page.
     - ListContainer renders the Message component which includes all the information about the message. This Message component is reused for each message. Messages are mapped inside ListContainer reusing Message component.
@@ -65,6 +62,9 @@
   list of messages to show on a specific page. We use javascript slice functionality to get messages between these two indices.
    - Based on current page number we recalculate the firstIndex and lastIndex every time the next/prev button is pressed.
 
+# Error Handling
+  - We have a very simple error handling for the app. If there is any error that gets into catch statements we set the hasError state and show the ErrorComponent. This Component shows there is an error and try again with a refresh, this helps the user to not see any debug messages or blank screen on the page. A better user experience.
+  - We can make this more advanced by using Toast containers on top of the screen with red color for errors and green for success messages.
 # Testing
   - Using jest and react-testing-library we are running few tests as below, we chose these testing libraries because they are suggested by React website, also they have good testing performance. react-testing-library always checks the component output which shouldnt change if UI remains the same, this makes things easy to test and the test cases will not need to change for any logic change in the component.
  
@@ -77,8 +77,7 @@
     - Clicking on Next page should render Sender UUID: 1 and 18 on the screen and should not have Sender UUID: 2 and content 18 on the screen, and vice versa after clicking Prev button. 
     - Clicking on delete icon should remove the corresponding message from the screen, check for that message existence on the screen.
 Command line should be something like this after running the tests:
-- ![alt text](https://drive.google.com/file/d/13FmzNrqIoec29PIFgU8Xz0wCdjGhL3gt/view?usp=sharing)
+- ![alt text](https://drive.google.com/uc?id=13FmzNrqIoec29PIFgU8Xz0wCdjGhL3gt)
   How to run the tests:
     - In cmd line at the root project location, run 'yarn test'
     - This should start the tests and show you the progress of tests. If all tests are passed you should see number of tests passed in green color. If any of the tests fail it will show you the details of the failed test along with DOM screenshot at that time.
-    
