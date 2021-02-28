@@ -2,8 +2,8 @@
 
 # Installation Instructions-
  - Running on stackblitz would run the code directly, please visit this [link](https://stackblitz.com/edit/chatlist?file=App.js) to access the project on stackblitz directly. The only difference between stackblitz and local project is src folder, local project has every file/folder under src folder while stackblitz has every file/folder at main root level 
- - If running this project on a local IDE, unzip the folder to any favorable location on the machine. So the folder name would be 'chatlist'. 
- - Open cmd line at the project root location and run **'yarn'** to install all required dependencies.
+ - If running this project on a local IDE, unzip the folder to any favorable location on the machine. So the folder name would be 'chatlist-app'. 
+ - Open cmd line at the project root location and run **'yarn'** to install all required dependencies. We are using yarn package manager to handle this app. If you need to install yarn globally you can run **'npm install --global yarn'**, restart the command line to run yarn again.
  - To start the app, run **'yarn start'** to start the app.
  - This should run the app locally on your browser on **PORT 3000** automatically. If any other app is running on the same port it would ask if we can run on a different port, please enter yes in the cmd line to open the page in the browser.
 
