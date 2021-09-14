@@ -1,0 +1,1250 @@
+{
+  "openapi" : "3.0.1",
+  "info" : {
+    "title" : "Side Core API",
+    "version" : "0.1.0"
+  },
+  "servers" : [ {
+    "url" : "https://us-central1-reside-int-c.cloudfunctions.net/adminApi"
+  }, {
+    "url" : "https://us-central1-reside-stage.cloudfunctions.net/adminApi"
+  }, {
+    "url" : "https://admin-api.sideinc.com/v1"
+  } ],
+  "tags" : [ {
+    "name" : "Teams",
+    "description" : "Operations for managing teams"
+  }, {
+    "name" : "Members",
+    "description" : "Operations for managing team members"
+  }, {
+    "name" : "Users",
+    "description" : "Operations for managing users"
+  }, {
+    "name" : "Fonts"
+  } ],
+  "paths" : {
+    "/teams" : {
+      "post" : {
+        "tags" : [ "Teams" ],
+        "summary" : "Create a team",
+        "parameters" : [ {
+          "$ref" : "#/components/parameters/Authorization"
+        }, {
+          "$ref" : "#/components/parameters/AppJson"
+        } ],
+        "requestBody" : {
+          "required" : true,
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "allOf" : [ {
+                  "$ref" : "#/components/schemas/TeamBase"
+                }, {
+                  "type" : "object",
+                  "properties" : {
+                    "salesforceId" : {
+                      "type" : "string",
+                      "description" : "The Salesforce ID associated with the team",
+                      "example" : "50130000000014c",
+                      "minLength" : 1,
+                      "maxLength" : 30
+                    }
+                  }
+                } ]
+              }
+            }
+          }
+        },
+        "responses" : {
+          "201" : {
+            "description" : "Information about the new team",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/TeamResponse"
+                }
+              }
+            }
+          },
+          "400" : {
+            "$ref" : "#/components/responses/BadRequest"
+          },
+          "401" : {
+            "$ref" : "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/teams/{teamId}" : {
+      "get" : {
+        "tags" : [ "Teams" ],
+        "summary" : "Fetch the information for a team",
+        "parameters" : [ {
+          "$ref" : "#/components/parameters/TeamId"
+        }, {
+          "$ref" : "#/components/parameters/Authorization"
+        }, {
+          "$ref" : "#/components/parameters/AppJson"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Returns team information",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/TeamResponse"
+                }
+              }
+            }
+          },
+          "401" : {
+            "$ref" : "#/components/responses/Unauthorized"
+          },
+          "404" : {
+            "description" : "Unable to find the team"
+          }
+        }
+      },
+      "patch" : {
+        "tags" : [ "Teams" ],
+        "summary" : "Update a team's information",
+        "parameters" : [ {
+          "$ref" : "#/components/parameters/TeamId"
+        }, {
+          "$ref" : "#/components/parameters/Authorization"
+        }, {
+          "$ref" : "#/components/parameters/AppJson"
+        } ],
+        "requestBody" : {
+          "required" : true,
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/TeamBase"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "The update team information",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/TeamResponse"
+                }
+              }
+            }
+          },
+          "400" : {
+            "$ref" : "#/components/responses/BadRequest"
+          },
+          "401" : {
+            "$ref" : "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/teams/{teamId}/members" : {
+      "parameters" : [ {
+        "$ref" : "#/components/parameters/TeamId"
+      }, {
+        "$ref" : "#/components/parameters/Authorization"
+      } ],
+      "get" : {
+        "summary" : "Get the members of a team",
+        "tags" : [ "Members" ],
+        "responses" : {
+          "200" : {
+            "description" : "All the members and their roles for the given team",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MembersResponse"
+                }
+              }
+            }
+          },
+          "400" : {
+            "$ref" : "#/components/responses/BadRequest"
+          },
+          "401" : {
+            "$ref" : "#/components/responses/Unauthorized"
+          }
+        }
+      },
+      "post" : {
+        "summary" : "Add team members and assign a default role",
+        "tags" : [ "Members" ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/MemberBase"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "201" : {
+            "description" : "The member has been added to the team",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MemberResponse"
+                }
+              }
+            }
+          },
+          "400" : {
+            "$ref" : "#/components/responses/BadRequest"
+          },
+          "401" : {
+            "$ref" : "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/teams/{teamId}/members/{userId}" : {
+      "parameters" : [ {
+        "$ref" : "#/components/parameters/TeamId"
+      }, {
+        "$ref" : "#/components/parameters/UserId"
+      }, {
+        "$ref" : "#/components/parameters/Authorization"
+      } ],
+      "patch" : {
+        "tags" : [ "Members" ],
+        "summary" : "Update team member role",
+        "parameters" : [ {
+          "$ref" : "#/components/parameters/Authorization"
+        }, {
+          "$ref" : "#/components/parameters/AppJson"
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "role" : {
+                    "type" : "string",
+                    "description" : "The role to associate to the team member.",
+                    "example" : "associateAgent"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "The member has been removed from the team",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MemberResponse"
+                }
+              }
+            }
+          },
+          "400" : {
+            "$ref" : "#/components/responses/BadRequest"
+          },
+          "401" : {
+            "$ref" : "#/components/responses/Unauthorized"
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "Members" ],
+        "summary" : "Remove a team members",
+        "parameters" : [ {
+          "$ref" : "#/components/parameters/Authorization"
+        }, {
+          "$ref" : "#/components/parameters/AppJson"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "The member has been removed from the team"
+          },
+          "400" : {
+            "$ref" : "#/components/responses/BadRequest"
+          },
+          "401" : {
+            "$ref" : "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/users" : {
+      "parameters" : [ {
+        "$ref" : "#/components/parameters/Authorization"
+      } ],
+      "get" : {
+        "parameters" : [ {
+          "name" : "filterType",
+          "description" : "The type of filter to apply with the value",
+          "in" : "query",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "enum" : [ "salesforceId", "email", "userId" ]
+          }
+        }, {
+          "name" : "search",
+          "in" : "query",
+          "description" : "The value to search for, like Salesforce Id, email, or User Id",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "minimum" : 1,
+            "maximum" : 255
+          }
+        } ],
+        "tags" : [ "Users" ],
+        "summary" : "Lookup a user by their Salesforce Id, email, or Agent ID.",
+        "description" : "One type of query parameter below must be provided.",
+        "responses" : {
+          "200" : {
+            "description" : "The information for the requested user.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "data" : {
+                      "type" : "array",
+                      "items" : {
+                        "allOf" : [ {
+                          "$ref" : "#/components/schemas/UserResponse"
+                        }, {
+                          "type" : "object",
+                          "properties" : {
+                            "teams" : {
+                              "type" : "array",
+                              "items" : {
+                                "allOf" : [ {
+                                  "type" : "object",
+                                  "properties" : {
+                                    "teamId" : {
+                                      "type" : "string",
+                                      "description" : "The generated team id",
+                                      "example" : "-HIVJnL-aweRQf395IVw"
+                                    }
+                                  }
+                                }, {
+                                  "$ref" : "#/components/schemas/TeamBase"
+                                }, {
+                                  "$ref" : "#/components/schemas/Timestamps"
+                                } ]
+                              }
+                            }
+                          }
+                        } ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Received a bad request.  Check that at least one type of query parameter is provided."
+          },
+          "401" : {
+            "$ref" : "#/components/responses/Unauthorized"
+          },
+          "404" : {
+            "description" : "The user was not found by the given query parameters."
+          }
+        }
+      },
+      "post" : {
+        "parameters" : [ {
+          "$ref" : "#/components/parameters/AppJson"
+        } ],
+        "tags" : [ "Users" ],
+        "summary" : "Create a user",
+        "requestBody" : {
+          "required" : true,
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "allOf" : [ {
+                  "$ref" : "#/components/schemas/UserRequest"
+                }, {
+                  "type" : "object",
+                  "properties" : {
+                    "salesforceId" : {
+                      "description" : "The Salesforce ID associated with the user",
+                      "type" : "string",
+                      "example" : "50130000000014c",
+                      "minLength" : 1,
+                      "maxLength" : 30
+                    },
+                    "primaryMLS" : {
+                      "type" : "string",
+                      "nullable" : true,
+                      "description" : "Primary MLS to use for the agent (this is set as the first element in the mlsSubscriptions object)",
+                      "minLength" : 1,
+                      "maxLength" : 50
+                    }
+                  }
+                } ]
+              }
+            }
+          }
+        },
+        "responses" : {
+          "201" : {
+            "description" : "Information about the new user",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/UserResponse"
+                  } ]
+                }
+              }
+            }
+          },
+          "400" : {
+            "$ref" : "#/components/responses/BadRequest"
+          },
+          "401" : {
+            "$ref" : "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/users/{userId}" : {
+      "parameters" : [ {
+        "$ref" : "#/components/parameters/UserId"
+      }, {
+        "$ref" : "#/components/parameters/Authorization"
+      }, {
+        "$ref" : "#/components/parameters/AppJson"
+      } ],
+      "patch" : {
+        "tags" : [ "Users" ],
+        "summary" : "Update a user, including (de)activate",
+        "requestBody" : {
+          "required" : true,
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "allOf" : [ {
+                  "$ref" : "#/components/schemas/UserRequest"
+                }, {
+                  "type" : "object",
+                  "properties" : {
+                    "primaryMLS" : {
+                      "type" : "string",
+                      "nullable" : true,
+                      "description" : "Primary MLS to use for the agent",
+                      "minLength" : 1,
+                      "maxLength" : 50
+                    }
+                  }
+                } ]
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "The updated information for the user",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/UserResponse"
+                }
+              }
+            }
+          },
+          "400" : {
+            "$ref" : "#/components/responses/BadRequest"
+          },
+          "401" : {
+            "$ref" : "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/fonts" : {
+      "get" : {
+        "summary" : "Get all available fonts",
+        "tags" : [ "Fonts" ],
+        "parameters" : [ {
+          "$ref" : "#/components/parameters/Authorization"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Returns the list of available fonts",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "anyOf" : [ {
+                      "type" : "object",
+                      "properties" : {
+                        "fontFamily" : {
+                          "type" : "string",
+                          "description" : "Font family name in parameter case",
+                          "example" : "avenir-next;"
+                        },
+                        "fontWeight" : {
+                          "type" : "string",
+                          "description" : "The font weight.",
+                          "example" : "400"
+                        },
+                        "fontStyle" : {
+                          "type" : "string",
+                          "description" : "the font style.",
+                          "example" : "normal"
+                        }
+                      }
+                    } ]
+                  }
+                }
+              }
+            }
+          },
+          "401" : {
+            "$ref" : "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    }
+  },
+  "components" : {
+    "parameters" : {
+      "Authorization" : {
+        "name" : "Authorization",
+        "description" : "An HMAC signature generated by hashing the path of the request with the key associated with the 'app-key-id'",
+        "in" : "header",
+        "required" : true,
+        "schema" : {
+          "type" : "string"
+        },
+        "example" : "hmac <app-key-id>:<signature>"
+      },
+      "AppJson" : {
+        "name" : "Content-Type",
+        "in" : "header",
+        "required" : true,
+        "schema" : {
+          "type" : "string"
+        },
+        "example" : "application/json"
+      },
+      "TeamId" : {
+        "name" : "teamId",
+        "description" : "The unique identifier for the team",
+        "in" : "path",
+        "required" : true,
+        "schema" : {
+          "type" : "string"
+        }
+      },
+      "UserId" : {
+        "name" : "userId",
+        "description" : "The unique identifier for the user",
+        "in" : "path",
+        "required" : true,
+        "schema" : {
+          "type" : "string"
+        }
+      }
+    },
+    "responses" : {
+      "BadRequest" : {
+        "description" : "Bad Request",
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/ErrorResponse"
+            }
+          }
+        }
+      },
+      "OK" : {
+        "description" : "OK"
+      },
+      "Unauthorized" : {
+        "description" : "Unauthorized",
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "schemas" : {
+      "UserBase" : {
+        "type" : "object",
+        "properties" : {
+          "firstName" : {
+            "description" : "The first name of the user",
+            "type" : "string",
+            "example" : "Jane",
+            "minLength" : 1,
+            "maxLength" : 50
+          },
+          "lastName" : {
+            "description" : "The last name of the user",
+            "type" : "string",
+            "example" : "Smith",
+            "minLength" : 1,
+            "maxLength" : 50
+          },
+          "email" : {
+            "description" : "The email address associated with the user",
+            "type" : "string",
+            "format" : "email"
+          },
+          "approved" : {
+            "type" : "boolean",
+            "description" : "Set the initial approved state for the user"
+          },
+          "accountTypes" : {
+            "type" : "array",
+            "description" : "Account types",
+            "items" : {
+              "anyOf" : [ {
+                "type" : "string",
+                "description" : "The name of the role",
+                "example" : "transactionCoordinator",
+                "enum" : [ "associatePartnerAgent", "developer", "foundingPartnerAgent", "marketingCoordinator", "transactionCoordinator" ]
+              } ]
+            }
+          },
+          "transactionSharingPermissions" : {
+            "type" : "array",
+            "description" : "Can view and edit transactions for the assigned agents",
+            "items" : {
+              "anyOf" : [ {
+                "type" : "string",
+                "description" : "Agent Id",
+                "example" : "-HIVJnhRa2gIAXXGQWFH"
+              } ]
+            }
+          },
+          "submitAs" : {
+            "type" : "array",
+            "description" : "Act on behalf of an agent",
+            "items" : {
+              "anyOf" : [ {
+                "type" : "string",
+                "description" : "Agent Id",
+                "example" : "-HIVJnpFmMsIt5y3DfEI"
+              } ]
+            }
+          },
+          "docusignEmail" : {
+            "type" : "string",
+            "description" : "User's Docusign email address",
+            "example" : "rocco@superbrokers.biz"
+          },
+          "defaultMCs" : {
+            "type" : "array",
+            "description" : "The default Marketing Coordinators for the user",
+            "items" : {
+              "anyOf" : [ {
+                "type" : "string",
+                "description" : "The id for the Marketing Coordinator",
+                "example" : "HIVJn_cHIkCrgW09ay4"
+              } ]
+            }
+          },
+          "defaultTCs" : {
+            "type" : "array",
+            "description" : "The default Transaction Coordinators for the user",
+            "items" : {
+              "anyOf" : [ {
+                "type" : "string",
+                "description" : "The id for the Transaction Coordinator",
+                "example" : "-HIVJo3svxLghZdYkO7z"
+              } ]
+            }
+          },
+          "mlsSubscriptions" : {
+            "type" : "object",
+            "description" : "A zero indexed object",
+            "properties" : {
+              "0" : {
+                "$ref" : "#/components/schemas/MlsService"
+              },
+              "1" : {
+                "$ref" : "#/components/schemas/MlsService"
+              },
+              "2" : {
+                "$ref" : "#/components/schemas/MlsService"
+              },
+              "3" : {
+                "$ref" : "#/components/schemas/MlsService"
+              },
+              "4" : {
+                "$ref" : "#/components/schemas/MlsService"
+              },
+              "5" : {
+                "$ref" : "#/components/schemas/MlsService"
+              },
+              "6" : {
+                "$ref" : "#/components/schemas/MlsService"
+              },
+              "7" : {
+                "$ref" : "#/components/schemas/MlsService"
+              },
+              "8" : {
+                "$ref" : "#/components/schemas/MlsService"
+              },
+              "9" : {
+                "$ref" : "#/components/schemas/MlsService"
+              }
+            },
+            "required" : [ "0" ]
+          },
+          "brokerage" : {
+            "type" : "object",
+            "description" : "The brokerage information",
+            "properties" : {
+              "name" : {
+                "type" : "string",
+                "description" : "Brokerage Name",
+                "example" : "Super Brokers",
+                "minLength" : 1,
+                "maxLength" : 50
+              },
+              "street" : {
+                "type" : "string",
+                "description" : "Brokerage Street",
+                "example" : "123 Main St."
+              },
+              "aptSuite" : {
+                "type" : "string",
+                "description" : "Brokerage apartment number or suite",
+                "example" : "#300"
+              },
+              "city" : {
+                "type" : "string",
+                "description" : "Brokerage city",
+                "example" : "Paris"
+              },
+              "state" : {
+                "type" : "string",
+                "description" : "Brokerage state",
+                "example" : "TX"
+              },
+              "zip" : {
+                "type" : "string",
+                "description" : "Brokerge zip code",
+                "example" : "94903",
+                "minLength" : 5,
+                "maxLength" : 10
+              },
+              "licenseNumber" : {
+                "type" : "string",
+                "description" : "Brokerage license number",
+                "example" : "ABC123"
+              },
+              "phone" : {
+                "type" : "string",
+                "description" : "Brokerage phone number",
+                "example" : "+1-234-567-8900"
+              },
+              "email" : {
+                "type" : "string",
+                "description" : "Brokerage email address",
+                "example" : "info@superbrokers.biz"
+              }
+            },
+            "required" : [ "aptSuite", "city", "email", "licenseNumber", "name", "phone", "state", "street", "zip" ]
+          },
+          "avatarUrl" : {
+            "type" : "string",
+            "nullable" : true,
+            "description" : "User's avatar url"
+          },
+          "agentLicenseNumber" : {
+            "type" : "string",
+            "nullable" : true,
+            "description" : "Agent license number",
+            "example" : "002312300"
+          },
+          "agentLicenseStatus" : {
+            "type" : "string",
+            "nullable" : false,
+            "description" : "Agent license status",
+            "example" : "active",
+            "enum" : [ "active", "onboarding", "terminated" ]
+          },
+          "cellPhoneNumber" : {
+            "type" : "string",
+            "nullable" : true,
+            "description" : "Agent license number",
+            "example" : "+1-234-567-8900"
+          },
+          "docusignCC" : {
+            "type" : "string",
+            "nullable" : true,
+            "description" : "Additional CC's to use with Docusign"
+          },
+          "broker" : {
+            "type" : "object",
+            "properties" : {
+              "firstName" : {
+                "type" : "string",
+                "nullable" : true,
+                "description" : "Broker first name",
+                "example" : "Alice",
+                "minLength" : 1,
+                "maxLength" : 50
+              },
+              "lastName" : {
+                "type" : "string",
+                "nullable" : true,
+                "description" : "Broker last name",
+                "example" : "Wonderland",
+                "minLength" : 1,
+                "maxLength" : 50
+              },
+              "licenseNumber" : {
+                "type" : "string",
+                "nullable" : true,
+                "description" : "Broker license number",
+                "example" : "A31201-223"
+              },
+              "phone" : {
+                "type" : "string",
+                "nullable" : true,
+                "description" : "Broker phone number",
+                "example" : "+1-234-567-8900"
+              },
+              "email" : {
+                "type" : "string",
+                "nullable" : true,
+                "description" : "Broker email",
+                "example" : "alice@superbroker.biz"
+              }
+            }
+          },
+          "supervisingBroker" : {
+            "type" : "object",
+            "properties" : {
+              "firstName" : {
+                "type" : "string",
+                "nullable" : true,
+                "description" : "Supervising broker first name",
+                "example" : "Alice",
+                "minLength" : 1,
+                "maxLength" : 50
+              },
+              "lastName" : {
+                "type" : "string",
+                "nullable" : true,
+                "description" : "Supervising broker last name",
+                "example" : "Wonderland",
+                "minLength" : 1,
+                "maxLength" : 50
+              },
+              "licenseNumber" : {
+                "type" : "string",
+                "nullable" : true,
+                "description" : "Supervising broker license number",
+                "example" : "A31201-223"
+              },
+              "phone" : {
+                "type" : "string",
+                "nullable" : true,
+                "description" : "Supervising broker phone number",
+                "example" : "+1-234-567-8900"
+              },
+              "email" : {
+                "type" : "string",
+                "nullable" : true,
+                "description" : "Supervising broker email",
+                "example" : "alice@superbroker.biz"
+              }
+            }
+          },
+          "officeManager" : {
+            "type" : "object",
+            "properties" : {
+              "firstName" : {
+                "type" : "string",
+                "nullable" : true,
+                "description" : "Office manager first name",
+                "example" : "Alice",
+                "minLength" : 1,
+                "maxLength" : 50
+              },
+              "lastName" : {
+                "type" : "string",
+                "nullable" : true,
+                "description" : "Office manager last name",
+                "example" : "Wonderland",
+                "minLength" : 1,
+                "maxLength" : 50
+              },
+              "licenseNumber" : {
+                "type" : "string",
+                "nullable" : true,
+                "description" : "Office manager license number",
+                "example" : "A31201-223"
+              },
+              "phone" : {
+                "type" : "string",
+                "description" : "Office manager phone number",
+                "example" : "+1-234-567-8900"
+              },
+              "email" : {
+                "type" : "string",
+                "nullable" : true,
+                "description" : "Office manager email",
+                "example" : "om@superbroker.biz"
+              }
+            }
+          },
+          "marketing" : {
+            "type" : "object",
+            "properties" : {
+              "agentEmailId" : {
+                "type" : "string",
+                "nullable" : true,
+                "description" : "Agent’s branded email for lead routing/limonada",
+                "example" : "agent@superbrokers.biz",
+                "minLength" : 1,
+                "maxLength" : 100
+              },
+              "copperEnabled" : {
+                "type" : "boolean",
+                "nullable" : false,
+                "description" : "Enables and disables the Copper integration. Setting false will unlink the Copper integration."
+              },
+              "homelightId" : {
+                "type" : "string",
+                "nullable" : true,
+                "description" : "User's homelight.com id",
+                "example" : "HLA1012",
+                "minLength" : 1,
+                "maxLength" : 100
+              },
+              "opcityId" : {
+                "type" : "string",
+                "nullable" : true,
+                "description" : "User's `opcity.com` id",
+                "example" : "OC1230540",
+                "minLength" : 1,
+                "maxLength" : 100
+              },
+              "realtorDotComId" : {
+                "type" : "string",
+                "nullable" : true,
+                "description" : "User's realtor.com id",
+                "example" : "KASO1231KA",
+                "minLength" : 1,
+                "maxLength" : 100
+              },
+              "redfinId" : {
+                "type" : "string",
+                "description" : "User's Redfin id",
+                "example" : "AS912FF",
+                "minLength" : 1,
+                "maxLength" : 100
+              },
+              "twilioNumber" : {
+                "type" : "string",
+                "nullable" : true,
+                "description" : "User's Twilio number (only accepts a plus symbol followed by 11 numbers in string format, or an empty string)",
+                "example" : 14151239876,
+                "minLength" : 12,
+                "maxLength" : 12
+              },
+              "zillowId" : {
+                "type" : "string",
+                "nullable" : true,
+                "description" : "User's Zillow id",
+                "example" : "ZKS000021",
+                "minLength" : 1,
+                "maxLength" : 100
+              }
+            }
+          },
+          "role" : {
+            "type" : "string",
+            "description" : "role of the user",
+            "example" : "assistant"
+          },
+          "salesforceId" : {
+            "description" : "The Salesforce ID associated with the user",
+            "type" : "string",
+            "example" : "50130000000014c",
+            "minLength" : 1,
+            "maxLength" : 30
+          },
+          "teamId" : {
+            "type" : "string",
+            "description" : "team id associated with the user",
+            "example" : "hzFM8wovwQZcIIR5HQVPGOyUtp83",
+            "minLength" : 1,
+            "maxLength" : 100
+          },
+          "teamName" : {
+            "type" : "string",
+            "description" : "team name associated with the user",
+            "example" : "The Jets",
+            "minLength" : 1,
+            "maxLength" : 50
+          }
+        },
+        "required" : [ "approved", "brokerage", "docusignEmail", "email", "firstName", "lastName", "salesforceId" ]
+      },
+      "UserRequest" : {
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/UserBase"
+        } ]
+      },
+      "UserResponse" : {
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/UserBase"
+        }, {
+          "type" : "object",
+          "properties" : {
+            "salesforceId" : {
+              "description" : "The Salesforce ID associated with the user",
+              "type" : "string",
+              "example" : "50130000000014c"
+            }
+          }
+        }, {
+          "$ref" : "#/components/schemas/Timestamps"
+        } ]
+      },
+      "MemberBase" : {
+        "type" : "object",
+        "properties" : {
+          "userId" : {
+            "type" : "string",
+            "description" : "The user id of the member",
+            "example" : "-HIVJo3svxLghZdYkO7z"
+          },
+          "role" : {
+            "type" : "string",
+            "description" : "The id of the role for the user",
+            "example" : "associateAgent"
+          }
+        }
+      },
+      "MemberResponse" : {
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/MemberBase"
+        } ]
+      },
+      "MembersResponse" : {
+        "type" : "object",
+        "properties" : {
+          "members" : {
+            "type" : "array",
+            "description" : "The list of members associated with the team",
+            "items" : {
+              "allOf" : [ {
+                "$ref" : "#/components/schemas/MemberResponse"
+              } ]
+            }
+          }
+        }
+      },
+      "TeamBase" : {
+        "type" : "object",
+        "properties" : {
+          "name" : {
+            "type" : "string",
+            "description" : "The name of the team",
+            "example" : "The Jets",
+            "minLength" : 1,
+            "maxLength" : 50
+          },
+          "teamFontFamily" : {
+            "type" : "string",
+            "description" : "Team Font Family (should be kebab-case)",
+            "example" : "atlas-typewriter",
+            "enum" : [ "arial", "times-new-roman", "proxima-nova", "proxima-nova-condensed", "bebas-neue-by-fontfabric", "coolvetica", "din-2014", "europa", "futura-pt", "roboto", "montserrat", "azo-sans-web", "open-sans", "liberation-sans", "pragmatica", "source-sans-pro", "itc-avant-garde-gothic-pro", "nobel", "helvetica-neue", "avenir", "avenir-next", "gotham", "din-condensed", "bebas-kai", "geo-sans-light", "langdon", "acherus-grotesque", "akzidenz-grotesk", "atlas-grotesk", "atlas-typewriter" ]
+          },
+          "teamFontWeight" : {
+            "type" : "string",
+            "description" : "Team Font Weight",
+            "example" : "400",
+            "enum" : [ "100", "200", "300", "400", "500", "600", "700", "800" ]
+          },
+          "teamFontStyle" : {
+            "type" : "string",
+            "description" : "Team Font Style",
+            "example" : "normal",
+            "enum" : [ "normal", "italic" ]
+          },
+          "teamLogo" : {
+            "type" : "string",
+            "description" : "Main Logo URL",
+            "format" : "url",
+            "example" : "https://storage.googleapis.com/.../logo.png"
+          },
+          "teamLogoHorizontal" : {
+            "type" : "string",
+            "description" : "Main Horizontal Team Logo URL",
+            "format" : "url",
+            "example" : "https://storage.googleapis.com/.../logo.png"
+          },
+          "notes" : {
+            "type" : "string",
+            "example" : "Created by Opus"
+          },
+          "websiteUrl" : {
+            "type" : "string",
+            "description" : "Main Website URL",
+            "example" : "https://thesharks.com"
+          },
+          "primary1Color" : {
+            "type" : "string",
+            "description" : "Primary Color 1",
+            "example" : "#e83e8c"
+          },
+          "accent1Color" : {
+            "type" : "string",
+            "description" : "Team Accent Color 1",
+            "example" : "#63db2a"
+          },
+          "brokerage" : {
+            "type" : "object",
+            "properties" : {
+              "name" : {
+                "type" : "string",
+                "description" : "Brokerage Name",
+                "example" : "Super Brokers",
+                "minLength" : 1,
+                "maxLength" : 50
+              },
+              "street" : {
+                "type" : "string",
+                "description" : "Brokerage Street",
+                "example" : "123 Main St."
+              },
+              "city" : {
+                "type" : "string",
+                "description" : "Brokerage City",
+                "example" : "Paris"
+              },
+              "state" : {
+                "type" : "string",
+                "description" : "Brokerage State",
+                "example" : "TX"
+              },
+              "zip" : {
+                "type" : "string",
+                "description" : "Brokerage Zip Code",
+                "example" : "94903",
+                "minLength" : 5,
+                "maxLength" : 10
+              },
+              "hasBrokerage" : {
+                "type" : "boolean"
+              }
+            },
+            "required" : [ "city", "name", "state", "street", "zip", "hasBrokerage" ]
+          },
+          "defaultTCs" : {
+            "type" : "array",
+            "description" : "List of default Transaction Coordinators",
+            "items" : {
+              "anyOf" : [ {
+                "type" : "string",
+                "description" : "Transaction Coordinator Id",
+                "example" : "-HIVJnL-aweRQf395IVq"
+              } ]
+            }
+          },
+          "defaultMCs" : {
+            "type" : "array",
+            "description" : "List of default Marketing Coordinators",
+            "items" : {
+              "anyOf" : [ {
+                "type" : "string",
+                "description" : "Marketing Coordinator Id",
+                "example" : "-HIVJnL-aweRQf395IVu"
+              } ]
+            }
+          },
+          "salesforceId" : {
+            "description" : "The Salesforce ID associated with the user",
+            "type" : "string",
+            "example" : "50130000000014c",
+            "minLength" : 1,
+            "maxLength" : 30
+          }
+        },
+        "required" : [ "accent1Color", "brokerage", "name", "primary1Color", "salesforceId", "websiteUrl" ]
+      },
+      "TeamResponse" : {
+        "allOf" : [ {
+          "type" : "object",
+          "properties" : {
+            "teamId" : {
+              "type" : "string",
+              "description" : "The generated team id",
+              "example" : "-HIVJnL-aweRQf395IVw"
+            },
+            "salesforceId" : {
+              "type" : "string",
+              "description" : "The Salesforce ID associated with the team",
+              "example" : "50130000000014c"
+            }
+          }
+        }, {
+          "$ref" : "#/components/schemas/TeamBase"
+        }, {
+          "$ref" : "#/components/schemas/Timestamps"
+        } ]
+      },
+      "Timestamps" : {
+        "type" : "object",
+        "properties" : {
+          "createdAt" : {
+            "description" : "The timestamp the record was created",
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "lastModified" : {
+            "description" : "The timestamp the record was last modified",
+            "type" : "string",
+            "format" : "date-time"
+          }
+        },
+        "required" : [ "createdAt", "lastModified" ]
+      },
+      "ErrorResponse" : {
+        "type" : "object",
+        "properties" : {
+          "error" : {
+            "type" : "string"
+          },
+          "message" : {
+            "type" : "string"
+          },
+          "info" : {
+            "type" : "string"
+          }
+        },
+        "required" : [ "error", "message" ]
+      },
+      "MlsService" : {
+        "type" : "string",
+        "enum" : [ "actris", "aggregateeastbay", "bareis", "bear", "catrs", "crisnet", "crmls", "ctxmls", "daytona", "fgcmls", "fresnomls", "gavar", "gepar", "gflr", "gpsmls", "har", "hdar", "itech", "lubar", "metrolist", "mlbor", "mlslistings", "mmmls", "nabor", "nefmls", "nsbbor", "ntreis", "rapb", "sabor", "saor", "sdmls", "sfar", "snvmls", "star", "stellar", "tcm", "themls" ]
+      }
+    }
+  }
+}
